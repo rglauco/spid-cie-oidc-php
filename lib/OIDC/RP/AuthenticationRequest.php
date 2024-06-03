@@ -52,6 +52,7 @@ class AuthenticationRequest
     /**
      *  creates the URL to OIDC Provider to which redirect the user
      *
+     * @param string $op_issuer id of the provider
      * @param string $authorization_endpoint autorization endpoint of the provider
      * @param int[] $acr array of int values of the acr params to send with the request
      * @param string[] $user_attributes array of string values of the user attributes to query with the request
@@ -65,7 +66,7 @@ class AuthenticationRequest
     {
         $client_id = $this->config['client_id'];
         $redirect_uri = Util::stringEndsWith($client_id, '/') ? $client_id : $client_id . '/';
-        if ($this->config['service_name'] != '') {
+        if (isset($this->config['service_name']) && $this->config['service_name'] != '') {
             $redirect_uri .= $this->config['service_name'] . '/';
         }
         $redirect_uri .= 'oidc/rp/redirect';
@@ -90,16 +91,41 @@ class AuthenticationRequest
 
         $userinfo_claims = array();
         foreach ($user_attributes as $a) {
+            //$userinfo_claims["https://attributes.spid.gov.it/" . $a] = null;  // TODO: check for spid compliance
             $userinfo_claims[$a] = array("essential" => true);
         }
 
         $claims = array(
             "id_token" => array(
+                //"nbf" =>  array( "essential" => true ),   // TODO: check for spid compliance
+                //"jti" =>  array( "essential" => true )    // TODO: check for spid compliance
                 "family_name" =>  array( "essential" => true ),
                 "given_name" =>  array( "essential" => true )
             ),
             "userinfo" => $userinfo_claims
         );
+
+        /*
+        $request = array(
+            "iss" => $client_id,
+            "aud" => array($op_issuer, $authorization_endpoint),
+            "iat" => strtotime("now"),
+            "exp" => strtotime("+1 hour"),
+            "client_id" => $client_id,
+            "response_type" => $response_type,
+            "scope" => $scope, //explode(" ", $scope),
+            "code_challenge" => $code_challenge,
+            "code_challenge_method" => $code_challenge_method,
+            "nonce" => $nonce,
+            "prompt" => $prompt,
+            "redirect_uri" => $redirect_uri,
+            "acr_values" => implode(" ", $acr_values),
+            "claims" => $claims,
+            "prompt" => $prompt,
+            "code_challenge" => $code_challenge,
+            "code_challenge_method" => $code_challenge_method
+        );
+        */
 
         $iat = strtotime("now");
         $exp = strtotime("+1 hour");
@@ -114,20 +140,23 @@ class AuthenticationRequest
             "acr_values" => implode(" ", $acr_values),
             "iat" => $iat,
             "exp" => $exp,
-            "jti" => 'spid-cie-php-oidc_' .Util::uuidv4(),
+            "jti" => Util::uuidv4(),
             "aud" => array($op_issuer, $authorization_endpoint),
             "claims" => $claims,
             "prompt" => $prompt,
             "code_challenge" => $code_challenge,
             "code_challenge_method" => $code_challenge_method
         );
-        $crt = $this->config['cert_public_core_sig'];
+
+        $crt = $this->config['cert_public'];
         $crt_jwk = JWT::getCertificateJWK($crt);
 
         $header = array(
             "typ" => "entity-statement+jwt",
             "alg" => "RS256",
-            "kid" => $crt_jwk['kid']
+            "kid" => $crt_jwk['kid'],
+            //"jwk" => $crt_jwk,
+            //"x5c" => $crt_jwk['x5c']
         );
 
         $key = $this->config['cert_private_core_sig'];
@@ -136,11 +165,12 @@ class AuthenticationRequest
 
         $authentication_request = $authorization_endpoint .
             "?client_id=" . urlencode($client_id) .
-            "&response_type=" .  urlencode($response_type) .
-            "&scope=" .  urlencode($scope) .
-            "&code_challenge=" .  urlencode($code_challenge) .
-            "&code_challenge_method=" .  urlencode($code_challenge_method) .
-            "&request=" .  urlencode($signed_request);
+            "&response_type=" . urlencode($response_type) .
+            "&scope=" . urlencode($scope) .
+            "&code_challenge=" . urlencode($code_challenge) .
+            "&code_challenge_method=" . urlencode($code_challenge_method) .
+            //"&nonce=" . urlencode($nonce) .
+            "&request=" . urlencode($signed_request);
 
         return $authentication_request;
     }
@@ -148,6 +178,7 @@ class AuthenticationRequest
     /**
      *  redirect the browser with the authentication request to the URL to OIDC Provider
      *
+     * @param string $op_issuer id of the provider
      * @param string $authorization_endpoint autorization endpoint of the provider
      * @param int[] $acr array of int values of the acr params to send with the request
      * @param string[] $user_attributes array of string values of the user attributes to query with the request

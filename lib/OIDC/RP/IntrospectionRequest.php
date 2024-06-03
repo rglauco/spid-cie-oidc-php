@@ -81,8 +81,8 @@ class IntrospectionRequest
         $header = array(
             "typ" => "JWT",
             "alg" => "RS256",
-            //"jwk" => $crt_jwk,
             "kid" => $crt_jwk['kid'],
+            //"jwk" => $crt_jwk,
             //"x5c" => $crt_jwk['x5c']
         );
 

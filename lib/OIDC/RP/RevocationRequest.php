@@ -70,7 +70,7 @@ class RevocationRequest
             "jti" => 'spid-cie-php-oidc_' . uniqid(),
             "iss" => $client_id,
             "sub" => $client_id,
-            "aud" => $token_endpoint,
+            "aud" => $revocation_endpoint,
             "iat" => strtotime("now"),
             "exp" => strtotime("+180 seconds")
         );
@@ -82,8 +82,8 @@ class RevocationRequest
         $header = array(
             "typ" => "JWT",
             "alg" => "RS256",
-            //"jwk" => $crt_jwk,
             "kid" => $crt_jwk['kid'],
+            //"jwk" => $crt_jwk,
             //"x5c" => $crt_jwk['x5c']
         );
 

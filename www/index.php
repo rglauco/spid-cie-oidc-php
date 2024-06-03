@@ -111,7 +111,7 @@ $f3->route([
     'GET /.well-known/openid-federation',
     'GET /@domain/.well-known/openid-federation'
 ], function ($f3) {
-    $domain = $f3->get("PARAMS.domain") ? $f3->get("PARAMS.domain") : 'default';
+    $domain = $f3->get("PARAMS.domain") ? $f3->get("PARAMS.domain") : $f3->get("CONFIG")['default_domain'];
     $config = $f3->get("CONFIG")['rp_proxy_clients'][$domain];
     if (!$config) {
         $f3->error(400, "Domain not found");
@@ -120,8 +120,9 @@ $f3->route([
     $logger = $f3->get("LOGGER");
     $logger->log('OIDC', 'GET /.well-known/openid-federation');
 
-    $output = $f3->get("GET.output");
-    $json = strtolower($output) == 'json';
+    $output = $f3->get("GET.output") ?? 'default';
+    $json = (strtolower($output)=='json');
+
     $mediaType = $json ? 'application/json' : 'application/entity-statement+jwt';
     header('Content-Type: ' . $mediaType);
     echo EntityStatement::makeFromConfig($config, $json);
@@ -131,7 +132,7 @@ $f3->route([
     'GET /oidc/rp/authz',
     'GET /oidc/rp/@domain/authz'
 ], function ($f3) {
-    $domain = $f3->get("PARAMS.domain") ? $f3->get("PARAMS.domain") : 'default';
+    $domain = $f3->get("PARAMS.domain") ? $f3->get("PARAMS.domain") : $f3->get("CONFIG")['default_domain'];
     $config = $f3->get("CONFIG")['rp_proxy_clients'][$domain];
     if (!$config) {
         $f3->error(400, "Domain not found");
@@ -142,7 +143,7 @@ $f3->route([
 
     // stash params state from proxy requests
     // (OIDC generic 2 OIDC SPID)
-    $f3->set("SESSION.state", $_GET['state']);
+    $f3->set("SESSION.state", $_GET['state']??'');
 
     $auth = $f3->get('SESSION.auth');
     if (
@@ -168,7 +169,7 @@ $f3->route([
     'GET /oidc/rp/authz/@ta/@op',
     'GET /oidc/rp/@domain/authz/@ta/@op'
 ], function ($f3) {
-    $domain = $f3->get("PARAMS.domain") ? $f3->get("PARAMS.domain") : 'default';
+    $domain = $f3->get("PARAMS.domain") ? $f3->get("PARAMS.domain") : $f3->get("CONFIG")['default_domain'];
     $config = $f3->get("CONFIG")['rp_proxy_clients'][$domain];
     if (!$config) {
         $f3->error(400, "Domain not found");
@@ -202,7 +203,7 @@ $f3->route([
     $nonce = $request['nonce'];
 
     if (!$federation->isFederationSupported($ta_id)) {
-        $f3->error(401, "Federation non supported: " . $ta_id);
+        $f3->error(401, "Federation not supported: " . $ta_id);
     }
 
     // resolve entity statement on federation
@@ -232,7 +233,7 @@ $f3->route([
     'GET /oidc/rp/redirect',
     'GET /oidc/rp/@domain/redirect'
 ], function ($f3) {
-    $domain = $f3->get("PARAMS.domain") ? $f3->get("PARAMS.domain") : 'default';
+    $domain = $f3->get("PARAMS.domain") ? $f3->get("PARAMS.domain") : $f3->get("CONFIG")['default_domain'];
     $config = $f3->get("CONFIG")['rp_proxy_clients'][$domain];
     if (!$config) {
         $f3->error(400, "Domain not found");
@@ -278,6 +279,7 @@ $f3->route([
     try {
         $tokenRequest = new TokenRequest($config, $hooks);
         $tokenResponse = $tokenRequest->send($token_endpoint, $code, $code_verifier);
+        
         $access_token = $tokenResponse->access_token;
 
         $userinfoRequest = new UserinfoRequest($config, $configuration->metadata->openid_provider, $hooks);
@@ -299,7 +301,8 @@ $f3->route([
         $responseHandler = new $responseHandlerClass($config);
         $responseHandler->sendResponse($redirect_uri, $userinfoResponse, $state);
     } catch (Exception $e) {
-        $f3->error($e->getCode(), $e->getMessage());
+        $code = in_array($e->getCode(), [200, 301, 302, 400, 401, 404])? $e->getCode() : 500;
+        $f3->error($code, $e->getMessage());
     }
 });
 
@@ -323,7 +326,7 @@ $f3->route([
     'GET /oidc/rp/introspection',
     'GET /oidc/rp/@domain/introspection',
 ], function ($f3) {
-    $domain = $f3->get("PARAMS.domain") ? $f3->get("PARAMS.domain") : 'default';
+    $domain = $f3->get("PARAMS.domain") ? $f3->get("PARAMS.domain") : $f3->get("CONFIG")['default_domain'];
     $config = $f3->get("CONFIG")['rp_proxy_clients'][$domain];
     if (!$config) {
         $f3->error(400, "Domain not found");
@@ -365,7 +368,7 @@ $f3->route([
     'GET /oidc/rp/logout',
     'GET /oidc/rp/@domain/logout'
 ], function ($f3) {
-    $domain = $f3->get("PARAMS.domain") ? $f3->get("PARAMS.domain") : 'default';
+    $domain = $f3->get("PARAMS.domain") ? $f3->get("PARAMS.domain") : $f3->get("CONFIG")['default_domain'];
     $config = $f3->get("CONFIG")['rp_proxy_clients'][$domain];
     if (!$config) {
         $f3->error(400, "Domain not found");

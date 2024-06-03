@@ -88,8 +88,8 @@ class TokenRequest
         $header = array(
             "typ" => "JWT",
             "alg" => "RS256",
-            //"jwk" => $crt_jwk,
             "kid" => $crt_jwk['kid'],
+            //"jwk" => $crt_jwk,
             //"x5c" => $crt_jwk['x5c']
         );
 
@@ -128,7 +128,7 @@ class TokenRequest
         // @codeCoverageIgnoreEnd
 
         $response = $this->http_client->post($token_endpoint, [ 'form_params' => $data ]);
-
+        
         // @codeCoverageIgnoreStart
         $code = $response->getStatusCode();
         if ($code != 200) {

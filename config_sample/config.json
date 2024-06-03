@@ -3,7 +3,7 @@
     "install_dir": "/home/spid-cie-oidc-php",
     "www_dir": "/var/www/html",
     "service_name": "",
-
+    "default_domain": "default",
     "rp_proxy_clients": {
         "default": {
             "trust_mark": "",
@@ -28,6 +28,7 @@
             "code": "ipa",
             "code_type": "IPACode",
             "organization_identifier": "PA:IT-ipa",
+            "organization_name": "Relying Party PHP Organization",
             "country_name": "IT",
             "locality_name": "Rome",
             "email": "info@relying-party-php.org",
@@ -43,7 +44,10 @@
                 "https://attributes.eid.gov.it/fiscal_number"
             ],
             "redirect_uri": "http://relying-party-php.org:8003/test.php",
-            "response_handler": "SPID_CIE_OIDC_PHP\\Response\\ResponseHandlerPlain"
+            "response_handler": "SPID_CIE_OIDC_PHP\\Response\\ResponseHandlerPlain",
+            "homepage_uri": "http://relying-party-php.org:8003/homepage_uri",
+            "logo_uri": "http://relying-party-php.org:8003/logo_uri",
+            "policy_uri": "http://relying-party-php.org:8003/policy_uri"
         },
         "2b4601ab-9e1b-4f5b-8b1e-3ae27beb9fdb": {
             "cert_private": "/home/spid-cie-oidc-php/cert/rp.pem",
@@ -95,7 +99,7 @@
             "spid_user_attributes": [
                 "given_name",
                 "family_name",
-                "email",
+                "birthdate",
                 "https://attributes.eid.gov.it/fiscal_number"
             ],
             "redirect_uri": "http://relying-party-php.org:8003/oidc/proxy/callback",
