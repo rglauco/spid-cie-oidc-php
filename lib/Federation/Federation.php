@@ -34,6 +34,9 @@ use SPID_CIE_OIDC_PHP\Core\JWT;
  */
 class Federation
 {
+    private array $config;
+    private array $fed_config;
+    
     /**
      *  creates a new Federation instance
      *
