@@ -31,6 +31,9 @@ use SPID_CIE_OIDC_PHP\Core\Util;
  */
 class Database
 {
+
+    private \SQLite3 $db;
+    
     /**
      *  creates a new Database instance
      *

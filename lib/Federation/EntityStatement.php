@@ -86,7 +86,7 @@ class EntityStatement
                     "policy_uri" => $config['policy_uri']
                 ),
                 "openid_relying_party" => array(
-                    "client_registration_types" => array( "automatic" ),
+                    "client_registration_types" => $config['client_registration_types'] ?? array( "automatic" ),
                     "jwks" => array(
                         "keys" => $crt_jwks
                     ),
@@ -94,8 +94,8 @@ class EntityStatement
                         "refresh_token",        // useful???
                         "authorization_code"
                     ),
-                    "application_type" => "web",
-                    "redirect_uris" => array( $config['client_id'] . '/oidc/rp/redirect' ),
+                    "application_type" => $config['application_type'] ?? "web",
+                    "redirect_uris" => array( $config['redirect_uri'] ?? ($config['client_id'] . '/oidc/rp/redirect') ),
                     "id_token_signed_response_alg" => "RS256",
                     "userinfo_signed_response_alg" => "RS256",
                     "userinfo_encrypted_response_alg" => "RSA-OAEP",
@@ -108,7 +108,7 @@ class EntityStatement
                     //"id_token_encrypted_response_alg" => "RSA-OAEP",
                     //"id_token_encrypted_response_enc" => "A256CBC-HS512",
                     "response_types" => array( "code" ),
-                    //"subject_type" => "pairwise"
+                    "subject_type" => $config['subject_type'] ?? "pairwise"
                 )
             ),
             "jwks" => array(
