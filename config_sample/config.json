@@ -35,10 +35,10 @@
                 "http://eidas.europa.eu/LoA/low"
             ],
             "spid_user_attributes": [
-                "name",
-                "familyName",
-                "email",
-                "fiscalNumber"
+                "given_name",
+                "family_name",
+                "birthdate",
+                "https://attributes.eid.gov.it/fiscal_number"
             ],
             "response_handler": "SPID_CIE_OIDC_PHP\\Response\\ResponseHandlerPlain",
             "homepage_uri": "http://relying-party-php.org:8003/homepage_uri",
@@ -65,10 +65,10 @@
                 1
             ],
             "spid_user_attributes": [
-                "name",
-                "familyName",
-                "email",
-                "fiscalNumber"
+                "given_name",
+                "family_name",
+                "birthdate",
+                "https://attributes.eid.gov.it/fiscal_number"
             ],
             "redirect_uri": "http://relying-party-php.org:8003/oidc/proxy/callback",
             "response_handler": "SPID_CIE_OIDC_PHP\\Response\\ResponseHandlerPlain"
@@ -93,10 +93,10 @@
                 1
             ],
             "spid_user_attributes": [
-                "name",
-                "familyName",
-                "email",
-                "fiscalNumber"
+                "given_name",
+                "family_name",
+                "birthdate",
+                "https://attributes.eid.gov.it/fiscal_number"
             ],
             "redirect_uri": "http://relying-party-php.org:8003/oidc/proxy/callback",
             "response_handler": "SPID_CIE_OIDC_PHP\\Response\\ResponseHandlerPlain"
