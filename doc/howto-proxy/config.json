@@ -1,0 +1,56 @@
+{
+  "production": true,
+  "install_dir": "\/var\/www\/rp-host-01\/spid-cie-oidc-php",
+  "www_dir": "\/var\/www\/rp-host-01",
+  "service_name": "test",
+  "default_domain": "default",
+  "rp_proxy_clients": {
+    "default": {
+      "client_id": "https:\/\/rp-host-01.example.edu\/test",
+      "client_name": "test",
+      "organization_name": "Example edu",
+      "authority_hint": "https:\/\/oidc.registry.servizicie.interno.gov.it",
+      "contacts": [
+        "supporto.identity@example.edu"
+      ],
+      "is_pa": true,
+      "code": "EXAMPLEEDU",
+      "code_type": "IPACode",
+      "organization_identifier": "PA:IT-EXAMPLEEDU",
+      "country_name": "IT",
+      "locality_name": "example",
+      "email": "urp@example.edu",
+      "telephone": "+39022056511",
+      "homepage_uri": "https:\/\/www.example.edu\/",
+      "logo_uri": "https:\/\/www.example.edu\/themes\/custom\/test_base\/icons\/logo.svg",
+      "policy_uri": "https:\/\/www.example.edu\/it\/privacy",
+      "requested_acr": [
+        2,
+        1
+      ],
+      "spid_user_attributes": [
+        "given_name",
+        "family_name",
+        "https:\/\/attributes.eid.gov.it\/fiscal_number"
+      ],
+      "trust_marks": [
+        {
+          "trust_mark": "eyJ[...]",
+          "iss": "https://oidc.registry.servizicie.interno.gov.it",
+          "id": "https://oidc.registry.servizicie.interno.gov.it/openid_relying_party/public"
+        }
+      ],
+      "redirect_uri": "https:\/\/rp-host-01.example.edu\/test\/oidc\/rp\/redirect",
+      "response_handler": "SPID_CIE_OIDC_PHP\\Response\\ResponseHandlerPlain",
+      "cert_private_fed": "\/var\/www\/rp-host-01\/spid-cie-oidc-php\/cert\/rp-fed.pem",
+      "cert_public_fed": "\/var\/www\/rp-host-01\/spid-cie-oidc-php\/cert\/rp-fed.crt",
+      "cert_private": "\/var\/www\/rp-host-01\/spid-cie-oidc-php\/cert\/rp.pem",
+      "cert_public_core_sig": "\/var\/www\/rp-host-01\/spid-cie-oidc-php\/cert\/rp.crt",
+      "cert_public": "\/var\/www\/rp-host-01\/spid-cie-oidc-php\/cert\/rp.crt",
+      "cert_enc_private": "\/var\/www\/rp-host-01\/spid-cie-oidc-php\/cert\/rp-enc.pem",
+      "cert_enc_public": "\/var\/www\/rp-host-01\/spid-cie-oidc-php\/cert\/rp-enc.crt",
+      "cert_private_core_sig": "\/var\/www\/rp-host-01\/spid-cie-oidc-php\/cert\/rp.pem",
+      "trust_mark": []
+    }
+  }
+}
